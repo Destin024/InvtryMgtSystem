@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33214.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvtryMgtSystemAPI", "InvtryMgtSystemAPI\InvtryMgtSystemAPI.csproj", "{B69B683C-6EE2-4A00-BD34-754117464F1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B69B683C-6EE2-4A00-BD34-754117464F1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B69B683C-6EE2-4A00-BD34-754117464F1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B69B683C-6EE2-4A00-BD34-754117464F1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B69B683C-6EE2-4A00-BD34-754117464F1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {81670B8C-C01E-4D93-B4D8-4AF9AFD3C5BC}
+	EndGlobalSection
+EndGlobal
