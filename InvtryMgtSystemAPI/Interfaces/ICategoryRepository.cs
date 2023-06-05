@@ -1,4 +1,5 @@
-﻿using InvtryMgtSystemAPI.Models;
+﻿using InvtryMgtSystemAPI.Data.Dto;
+using InvtryMgtSystemAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace InvtryMgtSystemAPI.Interfaces
         Category GetCategory(Guid id);
         Category GetCategory(string name);
 
+        Category GetCategoryTrimToUpper(CategoryDto createCategory);
         bool CategoryExists(Guid id);
         bool CreateCategory(Category category);
         bool UpdateCategory(Category category);

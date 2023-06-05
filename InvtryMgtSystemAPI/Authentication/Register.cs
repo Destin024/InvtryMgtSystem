@@ -5,7 +5,7 @@ namespace InvtryMgtSystemAPI.Authentication
 {
     public class Register
     {
-        [Required(ErrorMessage ="User Name is Requirer")]
+        [Required(ErrorMessage ="User Name is Required")]
         public string  UserName { get; set; }
         [EmailAddress]
         [Required(ErrorMessage ="Email Required") ]

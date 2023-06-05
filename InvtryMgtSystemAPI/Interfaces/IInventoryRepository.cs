@@ -16,7 +16,7 @@ namespace InvtryMgtSystemAPI.Interfaces
         bool CreateInventory(Inventory inventory);
         bool UpdateInventory(Inventory inventory);
         bool DeleteInventory(Inventory inventory);
-        bool save();
+        bool Save();
         
     }
 }

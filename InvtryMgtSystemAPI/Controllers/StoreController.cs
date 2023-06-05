@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Azure;
+using Duende.IdentityServer.Models;
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -59,35 +62,35 @@ namespace InvtryMgtSystemAPI.Controllers
             return Ok(store);
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
         public IActionResult CreateStore([FromBody]StoreDto createStore)
         {
             if (createStore == null)
             {
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status404NotFound, new Models.Response { Status = StatusCodes.Status404NotFound, Message = "Bad Request"});
             }
             var store = _storeRepository.GetStores()
                 .Where(s => s.Name.Trim().ToUpper() == createStore.Name.TrimEnd().ToUpper()).FirstOrDefault();
             if (store != null)
             {
-                ModelState.AddModelError("", "Store Already Exists");
-                return StatusCode(400, ModelState);
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new Models.Response { Status = StatusCodes.Status422UnprocessableEntity,Message = "Store Already Exists"} );
             }
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status400BadRequest, new Models.Response { Status =StatusCodes.Status400BadRequest, Message ="Invalid Request"});
             }
             var storeMap = _mapper.Map<Store>(createStore);
 
             if (!_storeRepository.CreateStore(storeMap))
             {
-                return StatusCode(500, ModelState);
+                return StatusCode(StatusCodes.Status500InternalServerError,new Models.Response { Status= StatusCodes.Status500InternalServerError, Message = "Something went Wrong while Creating Store" });
             }
-            return Ok("Successfully Saved");
+            return Ok(new Models.Response { Status = StatusCodes.Status200OK, Message ="Store Successfully Created"});
         }
-        [HttpPut("{storeid}")]
+        [HttpPut("Store/{storeid:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -96,26 +99,27 @@ namespace InvtryMgtSystemAPI.Controllers
         {
             if (updateStore == null)
             {
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status400BadRequest,new Models.Response{Status =StatusCodes.Status400BadRequest, Message ="Object Not found"});
             }
             if (storeId == null)
             {
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status400BadRequest, new Models.Response {Status =StatusCodes.Status400BadRequest, Message ="store id not found"});
             }
             if (!_storeRepository.StoreExists(storeId))
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status404NotFound, new Models.Response{Status=StatusCodes.Status404NotFound,Message ="Store not found"});
             }
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(StatusCodes.Status401Unauthorized);
             }
             var storeMap = _mapper.Map<Store>(updateStore);
             if (!_storeRepository.UpdateStore(storeMap))
             {
-                ModelState.AddModelError("", "Something went wrong while updating store");
+               //ModelState.AddModelError("", "Something went wrong while updating store");
+                return StatusCode(StatusCodes.Status500InternalServerError, new Models.Response{Status=StatusCodes.Status500InternalServerError,Message="Something went wrong while updating the store"});
             }
-            return NoContent();
+            return Ok(new Models.Response{Status =StatusCodes.Status204NoContent,Message="Store successfully updated"});
         }
 
         [HttpDelete("{storeId}")]
@@ -127,18 +131,18 @@ namespace InvtryMgtSystemAPI.Controllers
         {
             if (!_storeRepository.StoreExists(storeId))
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status404NotFound,new Models.Response{Status =StatusCodes.Status404NotFound,Message = "Id not found" });
             }
             var userToDelete = _storeRepository.GetStore(storeId);
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return StatusCode(StatusCodes.Status400BadRequest, new Models.Response{Status= StatusCodes.Status400BadRequest,Message="Invalid Request"});
             }
             if (!_storeRepository.DeleteStore(userToDelete))
             {
-                ModelState.AddModelError("", "Something went wrong while deleting store");
-                return StatusCode(400, ModelState);
+                //ModelState.AddModelError("", "Something went wrong while deleting store");
+                return StatusCode(StatusCodes.Status500InternalServerError, new Models.Response{Status = StatusCodes.Status500InternalServerError, Message="Something went wrong while deleting store"});
             }
             return NoContent();
         }

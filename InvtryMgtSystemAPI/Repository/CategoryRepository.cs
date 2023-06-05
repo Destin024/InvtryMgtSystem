@@ -1,4 +1,5 @@
 ﻿using InvtryMgtSystemAPI.Data;
+using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
 using System;
@@ -58,6 +59,12 @@ namespace InvtryMgtSystemAPI.Repository
         public Category GetCategory(string name)
         {
             return _context.Categories.Where(c => c.Name == name).FirstOrDefault();
+        }
+
+        public Category GetCategoryTrimToUpper(CategoryDto createCategory)
+        {
+            return GetCategories()
+                .Where(c => c.Name.Trim().ToUpper() == createCategory.Name.TrimEnd().ToUpper()).FirstOrDefault();
         }
     }
 }

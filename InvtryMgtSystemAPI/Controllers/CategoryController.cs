@@ -68,8 +68,7 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var category = _categoryRepository.GetCategories()
-                .Where(c => c.Name.Trim().ToUpper() == createCategory.Name.TrimEnd().ToUpper()).FirstOrDefault();
+            var category = _categoryRepository.GetCategoryTrimToUpper(createCategory);
 
             if (category != null)
             {

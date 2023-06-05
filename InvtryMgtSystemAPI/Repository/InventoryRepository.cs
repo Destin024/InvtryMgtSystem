@@ -20,13 +20,13 @@ namespace InvtryMgtSystemAPI.Repository
         public bool CreateInventory(Inventory inventory)
         {
             _context.Add(inventory);
-            return save();
+            return Save();
         }
 
         public bool DeleteInventory(Inventory inventory)
         {
             _context.Remove(inventory);
-            return save();
+            return Save();
         }
 
         public ICollection<Inventory> GetInventories()
@@ -45,7 +45,7 @@ namespace InvtryMgtSystemAPI.Repository
             return _context.Inventories.Any(i => i.InventoryId == inventoryId);
         }
 
-        public bool save()
+        public bool Save()
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
@@ -54,7 +54,7 @@ namespace InvtryMgtSystemAPI.Repository
         public bool UpdateInventory(Inventory inventory)
         {
             _context.Update(inventory);
-            return save();
+            return Save();
         }
     }
 }
