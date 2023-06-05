@@ -40,6 +40,7 @@ namespace InvtryMgtSystemAPI
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultSQLConnection"));
             });
+            services.AddRazorPages();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IInventoryRepository, InventoryRepository>();
@@ -51,7 +52,37 @@ namespace InvtryMgtSystemAPI
             //services.AddScoped<IUserRepository, UserRepository>();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "InvtryMgtSystemAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                { 
+                    Title = "InvtryMgtSystemAPI", 
+                    Version = "v1",
+                    Description="Authentication and Authorization in ASP.NET Core 5.0"
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'Bearer'[space] and then you valid token In the text below"
+
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                          {
+                             Reference=new OpenApiReference
+                               {
+                                  Type=ReferenceType.SecurityScheme,
+                                  Id="Bearer"
+                               }
+                          },
+                        new string[]{}
+                    }
+                });
+               
             });
 
             services.AddIdentity<ApplicationUser,IdentityRole>()
@@ -72,7 +103,9 @@ namespace InvtryMgtSystemAPI
                     {
                         ValidateAudience = true,
                         ValidateIssuer = true,
-                        ValidAudience = Configuration["JWT:VlidAudience"],
+                        ValidateLifetime=true,
+                        ValidateIssuerSigningKey=true,
+                        ValidAudience = Configuration["JWT:ValidAudience"],
                         ValidIssuer = Configuration["JWT:ValidIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
                     };

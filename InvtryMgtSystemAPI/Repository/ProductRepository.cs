@@ -32,7 +32,7 @@ namespace InvtryMgtSystemAPI.Repository
             return save();
         }
 
-        public Product GetProduct(int id)
+        public Product GetProduct(Guid id)
         {
             return _context.Products.Where(p => p.Id == id).FirstOrDefault();
         }
@@ -43,7 +43,7 @@ namespace InvtryMgtSystemAPI.Repository
             return _context.Products.ToList();
         }
 
-        public bool ProductExists(int id)
+        public bool ProductExists(Guid id)
         {
             return _context.Products.Any(p => p.Id == id);
         }

@@ -9,11 +9,11 @@ namespace InvtryMgtSystemAPI.Data.Dto
     public class InventoryDto
     {
 
-        public int InventoryId { get; set; }
+        public Guid InventoryId { get; set; }
         public int InventoryQuantity { get; set; }
-        public int StoreId { get; set; }
+        public Guid StoreId { get; set; }
         public string StoreName { get; set; }
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public DateTime CreatedAt { get; set; }
     }

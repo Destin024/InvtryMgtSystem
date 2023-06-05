@@ -3,6 +3,7 @@ using InvtryMgtSystemAPI.Data;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,12 +33,12 @@ namespace InvtryMgtSystemAPI.Repository
 
         }
 
-        public Transfer GetTransfer(int transferId)
+        public Transfer GetTransfer(Guid transferId)
         {
             return _context.Transfers.Where(t=>t.TransferId==transferId).FirstOrDefault();
         }
 
-        public ICollection<Transfer> GetTransferByStore(int transferId)
+        public ICollection<Transfer> GetTransferByStore(Guid transferId)
         {
             return _context.Transfers.Where(t => t.TransferId == transferId).Include(s => s.Store).ToList();
         }
@@ -53,7 +54,7 @@ namespace InvtryMgtSystemAPI.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool TransferExists(int transferId)
+        public bool TransferExists(Guid transferId)
         {
             return _context.Transfers.Where(t=>t.TransferId == transferId).Any();
         }

@@ -15,22 +15,21 @@ namespace InvtryMgtSystemAPI.Helper
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryDto, Category>();
 
-            CreateMap<Inventory, InventoryDto>().ForMember(dest => dest.InventoryId, act => act.MapFrom(src => src.ProductId))
-                                                .ForMember(dest => dest.InventoryId, act => act.MapFrom(src => src.StoreId));
-            CreateMap<InventoryDto, Inventory>();
+            CreateMap<Inventory, InventoryDto>();
+            CreateMap<InventoryDto, Inventory>().ForMember(dest=>dest.InventoryId,opt=>opt.MapFrom(src=>src.ProductId));
 
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>().ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.CategoryId));
             CreateMap<ProductDto, Product>();
 
             CreateMap<Store, StoreDto>();
             CreateMap<StoreDto, Store>();
 
             CreateMap<Transfer, TransferDto>();
-            CreateMap<TransferDto, Transfer>().ForMember(dest=>dest.TransferId,act=>act.MapFrom(src=>src.StoreId));
+            CreateMap<TransferDto, Transfer>().ForMember(dest=>dest.TransferId,opt=>opt.MapFrom(src=>src.StoreId));
 
             CreateMap<Transaction, TransactionDto>();
-            CreateMap<TransactionDto, Transaction>().ForMember(dest => dest.TransactionId, act => act.MapFrom(src => src.UserId))
-                                                    .ForMember(dest => dest.TransactionId, act => act.MapFrom(src => src.InventoryId));
+            CreateMap<TransactionDto, Transaction>().ForMember(dest => dest.TransactionId, opt => opt.MapFrom(src => src.InventoryId));
+
 
             //CreateMap<User, UserDto>();
             //CreateMap<UserDto, User>();

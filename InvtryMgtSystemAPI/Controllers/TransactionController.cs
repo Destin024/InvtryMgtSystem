@@ -3,8 +3,10 @@ using InvtryMgtSystemAPI.Data;
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TransactionController : ControllerBase
@@ -45,11 +48,11 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetTransaction(int trabsactionId)
+        public IActionResult GetTransaction(Guid transactionId)
         {
-            var transaction = _mapper.Map<TransactionDto>(_transactionRepository.GetTransaction(trabsactionId));
+            var transaction = _mapper.Map<TransactionDto>(_transactionRepository.GetTransaction(transactionId));
 
-            if (trabsactionId == 0)
+            if (transactionId == null)
             {
                 return NotFound();
             }
@@ -83,42 +86,11 @@ namespace InvtryMgtSystemAPI.Controllers
             }
             var transactionMap = _mapper.Map<Transaction>(createTransaction);
 
-            //var InventoryResult = _ctx.ProductInventories.Where(o => o.Id == tran.ProductInventoryId).FirstOrDefault();
-            //transaction.InitialQuantity = InventoryResult.TotalQuantity;
-            //InventoryResult.TotalQuantity = InventoryResult.TotalQuantity - tran.QuantitySold;
+            var InventoryResult = _ctx.Inventories.Where(o => o.InventoryId == transaction.TransactionId).FirstOrDefault();
+            transaction.RemainingQuantity = InventoryResult.InventoryQuantity;
+            InventoryResult.InventoryQuantity = InventoryResult.InventoryQuantity - transaction.InitialQuantity;
 
-            //[HttpGet]
-            //[Route(template: "GetInventoryByStoreName")]
-            //public async Task<IActionResult> GetAllInventoryByStoreName(string Storename)
-            //{
-            //    var store = await _ctx.ProductInventories.Where(o => o.Store.StoreName == Storename).FirstOrDefaultAsync();
-            //    var getStore = await _ctx.ProductInventories.FindAsync(store);
-            //    store.ProductId = getStore.ProductId;
-            //    store.Product.Name = getStore.Product.Name;
-            //    return Ok(getStore);
-            //}
-
-            //[HttpGet]
-            //[Route(template: "GetInventoryByStoreId")]
-            //public async Task<IActionResult> GetAllInventoryByStoreName(Guid StoreId)
-            //{
-            //    List<StoreInfoRequestDto> list = new List<StoreInfoRequestDto>();
-            //    var result = await _ctx.ProductInventories.Include(o => o.Product)
-            //        .Include(o => o.Store).Where(o => o.StoreID == StoreId).ToListAsync();
-            //    foreach (var item in result)
-            //    {
-            //        list.Add(new StoreInfoRequestDto
-            //        {
-            //            Id = item.Id,
-            //            Store = item.Store.StoreName,
-            //            ProductId = item.ProductId,
-            //            Product = item.Product.Name,
-            //            TotalQuantity = item.TotalQuantity,
-            //            Price = item.Price
-            //        });
-            //    }
-            //    return Ok(list);
-            //}
+            
 
             if (!_transactionRepository.CreateTransaction(transactionMap))
             {
@@ -129,12 +101,41 @@ namespace InvtryMgtSystemAPI.Controllers
             return Ok("Successfully saved");
         }
 
+        [HttpGet]
+        [Route(template: "GetTransactionByInventoryName")]
+        public async Task<IActionResult> GetAllTransactionByInventoryName(string inventoryName)
+        {
+            var transaction = await _ctx.Inventories.Where(o => o.InventoryQuantity.ToString() == inventoryName).FirstOrDefaultAsync();
+            var getTransaction = await _ctx.Transactions.FindAsync(transaction);
+            transaction.InventoryQuantity = getTransaction.RemainingQuantity;
+            transaction.InventoryQuantity = getTransaction.Inventory.InventoryQuantity;
+            return Ok(getTransaction);
+        }
+
+        [HttpGet]
+        [Route(template: "GetTransactionByInventoryId")]
+        public async Task<IActionResult> GetAllTransactionByStoreId(Guid inventoryId)
+        {
+            List<InventoryDto> list = new List<InventoryDto>();
+            var result = await _ctx.Transactions.Include(o => o.Inventory).Include(o=>o.InventoryId)
+                .Where(o => o.TransactionId == inventoryId).ToListAsync();
+            foreach (var item in result)
+            {
+                list.Add(new InventoryDto
+                {
+                    InventoryId = item.InventoryId,
+                    InventoryQuantity = item.Inventory.InventoryQuantity
+                });
+            }
+            return Ok(list);
+        }
+
         [HttpPut("{transactionId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult UpdateTransaction(int transactionId, [FromBody] TransactionDto updateTransaction)
+        public IActionResult UpdateTransaction(Guid transactionId, [FromBody] TransactionDto updateTransaction)
         {
             if (updateTransaction == null)
             {
@@ -165,7 +166,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteTransaction(int transactionId)
+        public IActionResult DeleteTransaction(Guid transactionId)
         {
             if (!_transactionRepository.TransactionExists(transactionId))
             {

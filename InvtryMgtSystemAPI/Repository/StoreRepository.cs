@@ -29,7 +29,7 @@ namespace InvtryMgtSystemAPI.Repository
             return save();
         }
 
-        public Store GetStore(int id)
+        public Store GetStore(Guid id)
         {
             return _context.Stores.Where(s => s.Id == id).FirstOrDefault();
         }
@@ -50,7 +50,7 @@ namespace InvtryMgtSystemAPI.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool StoreExists(int id)
+        public bool StoreExists(Guid id)
         {
             return _context.Stores.Any(s => s.Id == id);
         }

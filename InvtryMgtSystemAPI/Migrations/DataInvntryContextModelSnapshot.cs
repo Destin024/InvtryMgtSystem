@@ -89,11 +89,9 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -108,11 +106,9 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Inventory", b =>
                 {
-                    b.Property<int>("InventoryId")
+                    b.Property<Guid>("InventoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InventoryId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -120,11 +116,11 @@ namespace InvtryMgtSystemAPI.Migrations
                     b.Property<int>("InventoryQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("StoreId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("InventoryId");
 
@@ -159,14 +155,12 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -189,11 +183,9 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Store", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -214,11 +206,9 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<Guid>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -226,13 +216,10 @@ namespace InvtryMgtSystemAPI.Migrations
                     b.Property<int>("InitialQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("InventoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("InventoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("RemainingQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("TransactionId");
@@ -244,11 +231,9 @@ namespace InvtryMgtSystemAPI.Migrations
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Transfer", b =>
                 {
-                    b.Property<int>("TransferId")
+                    b.Property<Guid>("TransferId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransferId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -256,8 +241,8 @@ namespace InvtryMgtSystemAPI.Migrations
                     b.Property<int>("RemainingQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("StoreId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("TransferQuantity")
                         .HasColumnType("int");

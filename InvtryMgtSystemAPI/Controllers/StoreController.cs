@@ -2,6 +2,7 @@
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StoreController : ControllerBase
@@ -27,8 +29,9 @@ namespace InvtryMgtSystemAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public IActionResult GetStore()
+        public IActionResult GetStores()
         {
+
             var stores = _mapper.Map<List<StoreDto>>(_storeRepository.GetStores());
 
             if (!ModelState.IsValid)
@@ -41,11 +44,11 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetStore(int storeId)
+        public IActionResult GetStore(Guid storeId)
         {
             var store = _mapper.Map<StoreDto>(_storeRepository.GetStore(storeId));
 
-            if (storeId == 0)
+            if (storeId == null)
             {
                 return NotFound();
             }
@@ -89,7 +92,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult UpdateStore(int storeId, [FromBody]StoreDto updateStore)
+        public IActionResult UpdateStore(Guid storeId, [FromBody]StoreDto updateStore)
         {
             if (updateStore == null)
             {
@@ -120,7 +123,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteStore(int storeId)
+        public IActionResult DeleteStore(Guid storeId)
         {
             if (!_storeRepository.StoreExists(storeId))
             {

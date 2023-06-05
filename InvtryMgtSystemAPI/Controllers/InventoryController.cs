@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using InvtryMgtSystemAPI.Data;
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,17 +13,20 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class InventoryController : ControllerBase
     {
         private readonly IInventoryRepository _inventoryRepository;
         private readonly IMapper _mapper;
+        private readonly DataInvntryContext _ctx;
 
-        public InventoryController(IInventoryRepository inventoryRepository,IMapper mapper)
+        public InventoryController(IInventoryRepository inventoryRepository,IMapper mapper,DataInvntryContext ctx)
         {
             _inventoryRepository = inventoryRepository;
             _mapper = mapper;
+            _ctx = ctx;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -40,11 +45,11 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetInventory(int inventoryId)
+        public IActionResult GetInventory(Guid inventoryId)
         {
             var inventory = _mapper.Map<InventoryDto>(_inventoryRepository.GetInventory(inventoryId));
 
-            if (inventoryId == 0)
+            if (inventoryId == null)
             {
                 return NotFound();
             }
@@ -78,6 +83,8 @@ namespace InvtryMgtSystemAPI.Controllers
             }
             var inventoryMap = _mapper.Map<Inventory>(createInventory);
 
+            
+
             if (!_inventoryRepository.CreateInventory(inventoryMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving ");
@@ -91,7 +98,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult Updateinventory(int inventoryId,[FromBody]InventoryDto updatedInventory)
+        public IActionResult Updateinventory(Guid inventoryId,[FromBody]InventoryDto updatedInventory)
         {
             if (updatedInventory == null)
             {
@@ -124,7 +131,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteInventory(int inventoryId)
+        public IActionResult DeleteInventory(Guid inventoryId)
         {
             if (!_inventoryRepository.InventoryExists(inventoryId))
             {

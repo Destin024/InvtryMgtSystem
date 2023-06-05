@@ -7,12 +7,12 @@ namespace InvtryMgtSystemAPI.Models
 {
     public class Inventory
     {
-        public int InventoryId { get; set; }
+        public Guid InventoryId { get; set; }
         public int InventoryQuantity { get; set; }
         public Store Store { get; set; }
-        public int  StoreId { get; set; }
+        public Guid  StoreId { get; set; }
         public Product Product { get; set; }
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

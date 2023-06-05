@@ -27,12 +27,12 @@ namespace InvtryMgtSystemAPI.Repository
             return _context.Categories.ToList();
         }
 
-        public Category GetCategory(int id)
+        public Category GetCategory(Guid id)
         {
             return _context.Categories.OrderBy(c => c.Id == id).FirstOrDefault();
         }
 
-        public bool CategoryExists(int id)
+        public bool CategoryExists(Guid id)
         {
             return _context.Categories.Any(c => c.Id == id);
         }

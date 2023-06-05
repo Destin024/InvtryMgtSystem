@@ -7,7 +7,8 @@ namespace InvtryMgtSystemAPI.Authentication
     {
         [Required(ErrorMessage ="User Name is Requirer")]
         public string  UserName { get; set; }
-        [Required(ErrorMessage ="Email is Required")]
+        [EmailAddress]
+        [Required(ErrorMessage ="Email Required") ]
         public string   Email { get; set; }
         [Required(ErrorMessage ="Password is Required")]
         public string Password { get; set; }

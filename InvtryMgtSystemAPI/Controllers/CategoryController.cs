@@ -2,6 +2,7 @@
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -41,7 +43,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetCategory(int categoryId)
+        public IActionResult GetCategory(Guid categoryId)
         {
             if (!_categoryRepository.CategoryExists(categoryId))
             {
@@ -93,7 +95,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult UpdateCategory(int categoryId, [FromBody]CategoryDto updatedCategory)
+        public IActionResult UpdateCategory(Guid categoryId, [FromBody]CategoryDto updatedCategory)
         {
             if (updatedCategory == null)
             {
@@ -124,7 +126,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteCategory(int categoryId)
+        public IActionResult DeleteCategory(Guid categoryId)
         {
             if (!_categoryRepository.CategoryExists(categoryId))
             {

@@ -10,10 +10,10 @@ namespace InvtryMgtSystemAPI.Interfaces
     {
         ICollection<Category> GetCategories();
 
-        Category GetCategory(int id);
+        Category GetCategory(Guid id);
         Category GetCategory(string name);
 
-        bool CategoryExists(int id);
+        bool CategoryExists(Guid id);
         bool CreateCategory(Category category);
         bool UpdateCategory(Category category);
         bool DeleteCategory(Category category);

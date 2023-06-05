@@ -2,14 +2,17 @@
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TransferController : ControllerBase
@@ -42,7 +45,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetTransfer(int transferId)
+        public IActionResult GetTransfer(Guid transferId)
         {
             if (_transferRepository.TransferExists(transferId))
             {
@@ -62,7 +65,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetTransferByStore(int  storeId)
+        public IActionResult GetTransferByStore(Guid  storeId)
         {
             if (!_transferRepository.TransferExists(storeId))
             {
@@ -105,6 +108,7 @@ namespace InvtryMgtSystemAPI.Controllers
             }
             var transferMap = _mapper.Map<Transfer>(createTransfer);
 
+
             if (!_transferRepository.CreateTransfer(transferMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
@@ -112,18 +116,18 @@ namespace InvtryMgtSystemAPI.Controllers
             return Ok("Successfully Created");
         }
 
-        [HttpPatch("transferId")]
+        [HttpPut("transferId")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult UpdateTransfer(int transferId, [FromForm] TransferDto updateTransfer)
+        public IActionResult UpdateTransfer(Guid transferId, [FromForm] TransferDto updateTransfer)
         {
             if (updateTransfer == null)
             {
                 return BadRequest(ModelState);
             }
-            if (transferId == 0)
+            if (transferId == null)
             {
                 return BadRequest(ModelState);
             }
@@ -149,13 +153,13 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult DeleteTransfer(int transferId, [FromBody]TransferDto deleteTransfer)
+        public IActionResult DeleteTransfer(Guid transferId, [FromBody]TransferDto deleteTransfer)
         {
             if (deleteTransfer == null)
             {
                 return BadRequest(ModelState);
             }
-            if (transferId == 0)
+            if (transferId == null)
             {
                 return BadRequest(ModelState);
             }

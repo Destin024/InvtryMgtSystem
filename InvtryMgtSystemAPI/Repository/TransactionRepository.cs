@@ -32,7 +32,7 @@ namespace InvtryMgtSystemAPI.Repository
             return save();
         }
 
-        public Transaction GetTransaction(int transactionId)
+        public Transaction GetTransaction(Guid transactionId)
         {
             return _context.Transactions.Where(t => t.TransactionId == transactionId).FirstOrDefault();
         }
@@ -48,7 +48,7 @@ namespace InvtryMgtSystemAPI.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool TransactionExists(int transactionId)
+        public bool TransactionExists(Guid transactionId)
         {
             return _context.Transactions.Any(s => s.TransactionId == transactionId);
         }

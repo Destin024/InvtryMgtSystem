@@ -1,4 +1,5 @@
 ﻿using InvtryMgtSystemAPI.Models;
+using System;
 using System.Collections.Generic;
 
 namespace InvtryMgtSystemAPI.Interfaces
@@ -7,11 +8,11 @@ namespace InvtryMgtSystemAPI.Interfaces
     {
         ICollection<Transfer> GetTransfers();
 
-        Transfer GetTransfer(int transferId);
+        Transfer GetTransfer(Guid transferId);
 
-        ICollection<Transfer> GetTransferByStore(int transferId);
+        ICollection<Transfer> GetTransferByStore(Guid transferId);
 
-        bool TransferExists(int transferId);
+        bool TransferExists(Guid transferId);
 
         bool CreateTransfer(Transfer transfer);
         bool UpdateTransfer(Transfer transfer);

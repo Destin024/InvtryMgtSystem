@@ -2,6 +2,7 @@
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -40,11 +42,11 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetProduct(int productId)
+        public IActionResult GetProduct(Guid productId)
         {
             var product = _mapper.Map<ProductDto>(_productRepository.GetProduct(productId));
 
-            if (productId == 0)
+            if (productId == null)
             {
                 return NotFound();
             }
@@ -92,7 +94,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult UpdateProduct(int productId,[FromBody]ProductDto updatedProduct)
+        public IActionResult UpdateProduct(Guid productId,[FromBody]ProductDto updatedProduct)
         {
             if (updatedProduct == null)
             {
@@ -124,7 +126,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteProduct(int productId)
+        public IActionResult DeleteProduct(Guid productId)
         {
             if (!_productRepository.ProductExists(productId))
             {

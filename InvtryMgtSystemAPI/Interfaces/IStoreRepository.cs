@@ -9,9 +9,9 @@ namespace InvtryMgtSystemAPI.Interfaces
     public interface IStoreRepository
     {
         ICollection<Store> GetStores();
-        Store GetStore(int id);
+        Store GetStore(Guid id);
         Store GetStore(string name);
-        bool StoreExists(int id);
+        bool StoreExists(Guid id);
         bool CreateStore(Store store);
         bool UpdateStore(Store store);
         bool DeleteStore(Store store);

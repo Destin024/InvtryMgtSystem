@@ -8,13 +8,13 @@ namespace InvtryMgtSystemAPI.Data.Dto
 {
     public class TransactionDto
     {
-        public int TransactionId { get; set; }
+        public Guid TransactionId { get; set; }
         public int InitialQuantity { get; set; }
         public int RemainingQuantity { get; set; }
-        public int InventoryId { get; set; }
+        public Guid InventoryId { get; set; }
         public string  InventoryName { get; set; } 
-        public int UserId { get; set; }
-        public int UserName { get; set; }
+        //public int UserId { get; set; }
+        //public int UserName { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

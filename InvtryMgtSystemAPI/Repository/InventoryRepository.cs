@@ -34,13 +34,13 @@ namespace InvtryMgtSystemAPI.Repository
             return _context.Inventories.OrderBy(i => i.InventoryId).ToList();
         }
 
-        public Inventory GetInventory(int inventoryId)
+        public Inventory GetInventory(Guid inventoryId)
         {
             return _context.Inventories.Where(i => i.InventoryId == inventoryId).FirstOrDefault();
         }
 
 
-        public bool InventoryExists(int inventoryId)
+        public bool InventoryExists(Guid inventoryId)
         {
             return _context.Inventories.Any(i => i.InventoryId == inventoryId);
         }

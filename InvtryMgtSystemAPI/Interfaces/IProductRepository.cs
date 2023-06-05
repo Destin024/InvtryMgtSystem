@@ -9,8 +9,8 @@ namespace InvtryMgtSystemAPI.Interfaces
    public interface IProductRepository
     {
         ICollection<Product> GetProducts();
-        Product GetProduct(int id);
-        bool ProductExists(int id);
+        Product GetProduct(Guid id);
+        bool ProductExists(Guid id);
 
         bool CreateProduct(Product product);
         bool UpdateProduct(Product product);

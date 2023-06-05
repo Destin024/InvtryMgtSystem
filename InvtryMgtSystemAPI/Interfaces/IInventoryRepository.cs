@@ -11,8 +11,8 @@ namespace InvtryMgtSystemAPI.Interfaces
         ICollection<Inventory> GetInventories();
 
 
-        Inventory GetInventory(int inventoryId);
-        bool InventoryExists(int inventoryId);
+        Inventory GetInventory(Guid inventoryId);
+        bool InventoryExists(Guid inventoryId);
         bool CreateInventory(Inventory inventory);
         bool UpdateInventory(Inventory inventory);
         bool DeleteInventory(Inventory inventory);
