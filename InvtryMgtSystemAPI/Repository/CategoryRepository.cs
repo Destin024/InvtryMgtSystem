@@ -2,6 +2,7 @@
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,55 +18,54 @@ namespace InvtryMgtSystemAPI.Repository
             _context = context;
         }
 
-        public bool CreateCategory(Category category)
+        public async Task CreateCategoryAsync(Category category)
         {
-          var saved=  _context.Update(category);
-            return save();
+          await  _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
         }
 
-        public ICollection<Category> GetCategories()
+        public  ICollection<Category>GetCategories()
         {
-            return _context.Categories.ToList();
+            return  _context.Categories.ToList();
         }
 
-        public Category GetCategory(Guid id)
+        public async Task<Category> GetCategoryAsync(Guid id)
         {
-            return _context.Categories.OrderBy(c => c.Id == id).FirstOrDefault();
+            return await _context.Categories.OrderBy(c => c.Id == id).FirstOrDefaultAsync();
         }
 
         public bool CategoryExists(Guid id)
         {
-            return _context.Categories.Any(c => c.Id == id);
+             return _context.Categories.Any(c => c.Id == id);
         }
 
-        public bool save()
+        public async Task SaveAsync()
         {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
+            await _context.SaveChangesAsync();
         }
 
-        public bool UpdateCategory(Category category)
+        public async Task UpdateCategoryAsync(Category category)
         {
-            _context.Update(category);
-            return save();
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
         }
 
-        public bool DeleteCategory(Category category)
+        public async Task DeleteCategoryAsync(Category category)
         {
-            _context.Remove(category);
-            return save();
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
         }
 
-        public Category GetCategory(string name)
+        public async Task<Category> GetCategoryAsync(string name)
         {
-            return _context.Categories.Where(c => c.Name == name).FirstOrDefault();
+            return await _context.Categories.Where(c => c.Name == name).FirstOrDefaultAsync();
         }
 
-        public Category GetCategoryTrimToUpper(CategoryDto createCategory)
-        {
-            return GetCategories()
-                .Where(c => c.Name.Trim().ToUpper() == createCategory.Name.TrimEnd().ToUpper()).FirstOrDefault();
-        }
+        // public Category GetCategoryTrimToUpper(CategoryDto createCategory)
+        // {
+        //     return GetCategoriesAsync()
+        //         .Where(c => c.Name.Trim().ToUpper() == createCategory.Name.TrimEnd().ToUpper()).FirstOrDefault();
+        // }
     }
 }
  

@@ -12,8 +12,6 @@ namespace InvtryMgtSystemAPI.Models
         public int RemainingQuantity { get; set; }
         public Inventory Inventory { get; set; }
         public Guid InventoryId { get; set; }
-        //public User User { get; set; }
-        //public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

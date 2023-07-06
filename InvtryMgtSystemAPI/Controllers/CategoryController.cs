@@ -28,7 +28,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
 
-        public IActionResult GetCategories()
+        public  IActionResult GetCategories()
         {
             var categories = _mapper.Map<List<CategoryDto>>(_categoryRepository.GetCategories());
 
@@ -43,13 +43,13 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult GetCategory(Guid categoryId)
+        public async Task<IActionResult> GetCategory(Guid categoryId)
         {
-            if (!_categoryRepository.CategoryExists(categoryId))
-            {
-                return NotFound();
-            }
-            var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategory(categoryId));
+            // if (!await _categoryRepository.CategoryExistsAsync(categoryId))
+            // {
+            //     return NotFound();
+            // }
+            var category = _mapper.Map<CategoryDto>(_categoryRepository.GetCategoryAsync(categoryId));
 
             if (!ModelState.IsValid)
             {
@@ -62,39 +62,47 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult CreateCategory([FromBody] CategoryDto createCategory)
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryDto createCategory)
         {
             if (createCategory == null)
             {
                 return BadRequest(ModelState);
             }
-            var category = _categoryRepository.GetCategoryTrimToUpper(createCategory);
+            // var category = _categoryRepository.get
 
-            if (category != null)
-            {
-                ModelState.AddModelError("", "Category Already Exists");
-                return StatusCode(400, ModelState);
-            }
+            // if (category != null)
+            // {
+            //     ModelState.AddModelError("", "Category Already Exists");
+            //     return StatusCode(400, ModelState);
+            // }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var categoryMap = _mapper.Map<Category>(createCategory);
+            Category categoryMap =new()
+            {
+                Id = Guid.NewGuid(),
+                Name = createCategory.Name,
+                CreatedAt = createCategory.CreatedAt
+            };
 
-            if (!_categoryRepository.CreateCategory(categoryMap))
+            await _categoryRepository.CreateCategoryAsync(categoryMap);
+
+            if (categoryMap !=null)
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
-                return StatusCode(500, ModelState);
+                return StatusCode(StatusCodes.Status500InternalServerError, new Models.Response{Status = StatusCodes.Status500InternalServerError,Message="Something went wrong while saving"});
             }
-            return Ok("Successfully Created");
+            return CreatedAtAction(nameof(GetCategory),new {id =categoryMap.Id},categoryMap);
 
         }
 
         [HttpPut("{categoryId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 
-        public IActionResult UpdateCategory(Guid categoryId, [FromBody]CategoryDto updatedCategory)
+        public async  Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody]CategoryDto updatedCategory)
         {
             if (updatedCategory == null)
             {
@@ -104,20 +112,28 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_categoryRepository.CategoryExists(categoryId))
+            var categoryToUpdate = await _categoryRepository.GetCategoryAsync(categoryId);
+            if(categoryToUpdate == null) 
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status404NotFound, new Models.Response{Status = StatusCodes.Status404NotFound, Message = "Category not found"});
             }
+            // if (!_categoryRepository.CategoryExistsAsync(categoryId))
+            // {
+            //     return NotFound();
+            // }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var categoryMap = _mapper.Map<Category>(updatedCategory);
-            if (!_categoryRepository.UpdateCategory(categoryMap))
+             categoryToUpdate.Name = updatedCategory.Name;
+             categoryToUpdate.CreatedAt = updatedCategory.CreatedAt;
+
+            if (categoryToUpdate !=null)
             {
                 ModelState.AddModelError("", "Something went wrong while updating category");
                 return StatusCode(500, ModelState);
             }
+            await _categoryRepository.UpdateCategoryAsync(categoryToUpdate);
             return NoContent();
         }
         [HttpDelete("{categoryId}")]
@@ -125,23 +141,25 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult DeleteCategory(Guid categoryId)
+        public async Task<IActionResult> DeleteCategory(Guid categoryId)
         {
-            if (!_categoryRepository.CategoryExists(categoryId))
-            {
-                return NotFound();
-            }
-            var categoryToDelete = _categoryRepository.GetCategory(categoryId);
+            // if (!_categoryRepository.CategoryExists(categoryId))
+            // {
+            //     return NotFound();
+            // }
+            var categoryToDelete = await _categoryRepository.GetCategoryAsync(categoryId);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (!_categoryRepository.DeleteCategory(categoryToDelete))
+            if (categoryToDelete!=null)
             {
                 ModelState.AddModelError("", "Something went wrong while deleting Category");
                 return StatusCode(400, ModelState);
             }
+            await _categoryRepository.DeleteCategoryAsync(categoryToDelete);
+
             return NoContent();
         }
     }

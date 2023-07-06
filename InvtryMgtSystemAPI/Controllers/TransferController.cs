@@ -115,6 +115,35 @@ namespace InvtryMgtSystemAPI.Controllers
             }
             return Ok("Successfully Created");
         }
+        //   [HttpPost("StockTransfer")]
+        // public IActionResult StockTransfer(StockTransferDto stockTransfer)
+        // {
+
+        //     StockTransfer stockT = new StockTransfer();
+
+        //     stockT.TransferQuantity = stockTransfer.TransferQuantity;
+        //     stockT.ProductInventoryId = stockTransfer.ProductInventoryId;
+        //     stockT.StoreId = stockTransfer.StoreId;
+        //     stockT.UserId = stockTransfer.UserId;
+        //     stockT.CreatedDate = DateTime.Now;
+        //     stockT.StatusId = 1;
+
+
+        //     var InventoryResult = _ctx.ProductInventories.Where(o => o.Id == stockT.ProductInventoryId).FirstOrDefault();
+        //     var currentQuantity = double.Parse(InventoryResult.Quantity) - double.Parse(stockT.TransferQuantity);
+        //     InventoryResult.Quantity = currentQuantity.ToString();
+
+
+        //     _ctx.StockTransfers.Add(stockT);
+        //     _ctx.SaveChanges();
+
+        //     var result = new
+        //     {
+        //         StatusCode = 200,
+        //         Content = "Stock Transferred Successfully",
+        //     };
+        //     return Ok(result);
+        // }
 
         [HttpPut("transferId")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

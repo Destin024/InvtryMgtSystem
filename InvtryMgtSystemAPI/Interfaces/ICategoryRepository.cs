@@ -11,14 +11,13 @@ namespace InvtryMgtSystemAPI.Interfaces
     {
         ICollection<Category> GetCategories();
 
-        Category GetCategory(Guid id);
-        Category GetCategory(string name);
-
-        Category GetCategoryTrimToUpper(CategoryDto createCategory);
-        bool CategoryExists(Guid id);
-        bool CreateCategory(Category category);
-        bool UpdateCategory(Category category);
-        bool DeleteCategory(Category category);
-        bool save();
+        Task<Category> GetCategoryAsync(Guid id);
+        Task<Category> GetCategoryAsync(string name);
+        //Category GetCategoryTrimToUpper(CategoryDto createCategory);
+         bool CategoryExists(Guid id);
+        Task CreateCategoryAsync(Category category);
+        Task UpdateCategoryAsync(Category category);
+        Task DeleteCategoryAsync(Category category);
+        Task SaveAsync();
     }
 }
