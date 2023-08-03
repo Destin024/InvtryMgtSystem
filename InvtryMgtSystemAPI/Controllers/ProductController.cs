@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -30,7 +30,7 @@ namespace InvtryMgtSystemAPI.Controllers
 
         public IActionResult GetProduct()
         {
-            var products = _mapper.Map<List<ProductDto>> (_productRepository.GetProducts());
+            var products = _mapper.Map<List<ProductInventoryDto>> (_productRepository.GetProducts());
 
             if (!ModelState.IsValid)
             {
@@ -44,7 +44,7 @@ namespace InvtryMgtSystemAPI.Controllers
 
         public IActionResult GetProduct(Guid productId)
         {
-            var product = _mapper.Map<ProductDto>(_productRepository.GetProduct(productId));
+            var product = _mapper.Map<ProductInventoryDto>(_productRepository.GetProduct(productId));
 
             if (productId == null)
             {
@@ -61,7 +61,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public IActionResult CreateProduct([FromBody] ProductDto createProduct)
+        public IActionResult CreateProduct([FromBody] ProductInventoryDto createProduct)
         {
             if (createProduct ==null)
             {
@@ -79,7 +79,7 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var productMap = _mapper.Map<Product>(createProduct);
+            var productMap = _mapper.Map<ProductInventory>(createProduct);
             if (!_productRepository.CreateProduct(productMap))
             {
                 ModelState.AddModelError("", "Something wrong while saving");
@@ -94,7 +94,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public IActionResult UpdateProduct(Guid productId,[FromBody]ProductDto updatedProduct)
+        public IActionResult UpdateProduct(Guid productId,[FromBody]ProductInventoryDto updatedProduct)
         {
             if (updatedProduct == null)
             {
@@ -112,7 +112,7 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var productMap = _mapper.Map<Product>(updatedProduct);
+            var productMap = _mapper.Map<ProductInventory>(updatedProduct);
 
             if (!_productRepository.UpdateProduct(productMap))
             {

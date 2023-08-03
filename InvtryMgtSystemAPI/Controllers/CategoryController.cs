@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
@@ -88,12 +88,12 @@ namespace InvtryMgtSystemAPI.Controllers
 
             await _categoryRepository.CreateCategoryAsync(categoryMap);
 
-            if (categoryMap !=null)
+            if (categoryMap ==null)
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(StatusCodes.Status500InternalServerError, new Models.Response{Status = StatusCodes.Status500InternalServerError,Message="Something went wrong while saving"});
             }
-            return CreatedAtAction(nameof(GetCategory),new {id =categoryMap.Id},categoryMap);
+            return Ok(new Models.Response{Status = StatusCodes.Status201Created,Message = "Category Created Successfully"});
 
         }
 

@@ -82,7 +82,6 @@ namespace InvtryMgtSystemAPI
                         new string[]{}
                     }
                 });
-               
             });
 
             services.AddIdentity<ApplicationUser,IdentityRole>()

@@ -178,7 +178,69 @@ namespace InvtryMgtSystemAPI.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("InvtryMgtSystemAPI.Models.ProductInventory", b =>
+                {
+                    b.Property<Guid>("ProductInventoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductPrice")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.HasKey("ProductInventoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductInventories");
+                });
+
+            modelBuilder.Entity("InvtryMgtSystemAPI.Models.StockTransfer", b =>
+                {
+                    b.Property<Guid>("StockTransferId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductInventoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TransferQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("StockTransferId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("StockTransfers");
                 });
 
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Store", b =>
@@ -227,31 +289,6 @@ namespace InvtryMgtSystemAPI.Migrations
                     b.HasIndex("InventoryId");
 
                     b.ToTable("Transactions");
-                });
-
-            modelBuilder.Entity("InvtryMgtSystemAPI.Models.Transfer", b =>
-                {
-                    b.Property<Guid>("TransferId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("RemainingQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TransferQuantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("TransferId");
-
-                    b.HasIndex("StoreId");
-
-                    b.ToTable("Transfers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -417,6 +454,28 @@ namespace InvtryMgtSystemAPI.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("InvtryMgtSystemAPI.Models.ProductInventory", b =>
+                {
+                    b.HasOne("InvtryMgtSystemAPI.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("InvtryMgtSystemAPI.Models.StockTransfer", b =>
+                {
+                    b.HasOne("InvtryMgtSystemAPI.Models.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
+                });
+
             modelBuilder.Entity("InvtryMgtSystemAPI.Models.Transaction", b =>
                 {
                     b.HasOne("InvtryMgtSystemAPI.Models.Inventory", "Inventory")
@@ -426,17 +485,6 @@ namespace InvtryMgtSystemAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Inventory");
-                });
-
-            modelBuilder.Entity("InvtryMgtSystemAPI.Models.Transfer", b =>
-                {
-                    b.HasOne("InvtryMgtSystemAPI.Models.Store", "Store")
-                        .WithMany()
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

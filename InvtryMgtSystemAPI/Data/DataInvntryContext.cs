@@ -17,12 +17,12 @@ namespace InvtryMgtSystemAPI.Data
 
         }
 
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductInventory> ProductInventories { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<PaymentMode> PaymentModes { get; set; }
         public DbSet<Store> Stores { get; set; }
-        public DbSet<Transfer> Transfers { get; set; }
+        public DbSet<StockTransfer> StockTransfers { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

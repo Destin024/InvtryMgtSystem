@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InvtryMgtSystemAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -200,7 +200,7 @@ namespace InvtryMgtSystemAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Product",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -212,9 +212,9 @@ namespace InvtryMgtSystemAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_Product", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
+                        name: "FK_Product_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
@@ -222,20 +222,45 @@ namespace InvtryMgtSystemAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transfers",
+                name: "ProductInventories",
                 columns: table => new
                 {
-                    TransferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TransferQuantity = table.Column<int>(type: "int", nullable: false),
-                    RemainingQuantity = table.Column<int>(type: "int", nullable: false),
-                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductInventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<double>(type: "float", nullable: false),
+                    ProductPrice = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transfers", x => x.TransferId);
+                    table.PrimaryKey("PK_ProductInventories", x => x.ProductInventoryId);
                     table.ForeignKey(
-                        name: "FK_Transfers_Stores_StoreId",
+                        name: "FK_ProductInventories_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StockTransfers",
+                columns: table => new
+                {
+                    StockTransferId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductInventoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TransferQuantity = table.Column<int>(type: "int", nullable: false),
+                    StoreId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StockTransfers", x => x.StockTransferId);
+                    table.ForeignKey(
+                        name: "FK_StockTransfers_Stores_StoreId",
                         column: x => x.StoreId,
                         principalTable: "Stores",
                         principalColumn: "Id",
@@ -256,9 +281,9 @@ namespace InvtryMgtSystemAPI.Migrations
                 {
                     table.PrimaryKey("PK_Inventories", x => x.InventoryId);
                     table.ForeignKey(
-                        name: "FK_Inventories_Products_ProductId",
+                        name: "FK_Inventories_Product_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Products",
+                        principalTable: "Product",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -340,19 +365,24 @@ namespace InvtryMgtSystemAPI.Migrations
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId",
-                table: "Products",
+                name: "IX_Product_CategoryId",
+                table: "Product",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductInventories_CategoryId",
+                table: "ProductInventories",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StockTransfers_StoreId",
+                table: "StockTransfers",
+                column: "StoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transactions_InventoryId",
                 table: "Transactions",
                 column: "InventoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transfers_StoreId",
-                table: "Transfers",
-                column: "StoreId");
         }
 
         /// <inheritdoc />
@@ -377,10 +407,13 @@ namespace InvtryMgtSystemAPI.Migrations
                 name: "PaymentModes");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "ProductInventories");
 
             migrationBuilder.DropTable(
-                name: "Transfers");
+                name: "StockTransfers");
+
+            migrationBuilder.DropTable(
+                name: "Transactions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -392,7 +425,7 @@ namespace InvtryMgtSystemAPI.Migrations
                 name: "Inventories");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Product");
 
             migrationBuilder.DropTable(
                 name: "Stores");

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class InventoryController : ControllerBase

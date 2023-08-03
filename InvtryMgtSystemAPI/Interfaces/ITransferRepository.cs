@@ -6,17 +6,17 @@ namespace InvtryMgtSystemAPI.Interfaces
 {
     public interface ITransferRepository
     {
-        ICollection<Transfer> GetTransfers();
+        ICollection<StockTransfer> GetTransfers();
 
-        Transfer GetTransfer(Guid transferId);
+        StockTransfer GetTransfer(Guid transferId);
 
-        ICollection<Transfer> GetTransferByStore(Guid transferId);
+        ICollection<StockTransfer> GetTransferByStore(Guid transferId);
 
         bool TransferExists(Guid transferId);
 
-        bool CreateTransfer(Transfer transfer);
-        bool UpdateTransfer(Transfer transfer);
-        bool DeleteTransfer(Transfer transfer);
+        bool CreateTransfer(StockTransfer transfer);
+        bool UpdateTransfer(StockTransfer transfer);
+        bool DeleteTransfer(StockTransfer transfer);
 
         bool save();
 

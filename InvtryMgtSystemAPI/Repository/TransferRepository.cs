@@ -20,32 +20,32 @@ namespace InvtryMgtSystemAPI.Repository
             _mapper = mapper;
         }
 
-        public bool CreateTransfer(Transfer transfer)
+        public bool CreateTransfer(StockTransfer transfer)
         {
              _context.Add(transfer);
             return save();
         }
 
-        public bool DeleteTransfer(Transfer transfer)
+        public bool DeleteTransfer(StockTransfer transfer)
         {
              _context.Remove(transfer);
             return save();
 
         }
 
-        public Transfer GetTransfer(Guid transferId)
+        public StockTransfer GetTransfer(Guid transferId)
         {
-            return _context.Transfers.Where(t=>t.TransferId==transferId).FirstOrDefault();
+            return _context.StockTransfers.Where(t=>t.StockTransferId==transferId).FirstOrDefault();
         }
 
-        public ICollection<Transfer> GetTransferByStore(Guid transferId)
+        public ICollection<StockTransfer> GetTransferByStore(Guid transferId)
         {
-            return _context.Transfers.Where(t => t.TransferId == transferId).Include(s => s.Store).ToList();
+            return _context.StockTransfers.Where(t => t.StockTransferId == transferId).Include(s => s.Store).ToList();
         }
 
-        public ICollection<Transfer> GetTransfers()
+        public ICollection<StockTransfer> GetTransfers()
         {
-            return _context.Transfers.ToList();
+            return _context.StockTransfers.ToList();
         }
 
         public bool save()
@@ -56,10 +56,10 @@ namespace InvtryMgtSystemAPI.Repository
 
         public bool TransferExists(Guid transferId)
         {
-            return _context.Transfers.Where(t=>t.TransferId == transferId).Any();
+            return _context.StockTransfers.Where(t=>t.StockTransferId == transferId).Any();
         }
 
-        public bool UpdateTransfer(Transfer transfer)
+        public bool UpdateTransfer(StockTransfer transfer)
         {
              _context.Update(transfer);
             return save();

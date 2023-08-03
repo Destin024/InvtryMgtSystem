@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InvtryMgtSystemAPI.Data;
 using InvtryMgtSystemAPI.Data.Dto;
 using InvtryMgtSystemAPI.Interfaces;
 using InvtryMgtSystemAPI.Models;
@@ -12,18 +13,20 @@ using System.Linq;
 
 namespace InvtryMgtSystemAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TransferController : ControllerBase
     {
         private readonly ITransferRepository _transferRepository;
         private readonly IMapper _mapper;
+        private readonly DataInvntryContext _ctx;
 
-        public TransferController(ITransferRepository transferRepository, IMapper mapper)
+        public TransferController(ITransferRepository transferRepository, IMapper mapper, DataInvntryContext ctx)
         {
             _transferRepository = transferRepository;
             _mapper = mapper;
+            _ctx = ctx;
         }
 
         [HttpGet]
@@ -32,7 +35,7 @@ namespace InvtryMgtSystemAPI.Controllers
 
         public IActionResult GetTransfers()
         {
-            var transfers = _mapper.Map<List<TransferDto>>(_transferRepository.GetTransfers());
+            var transfers = _mapper.Map<List<StockTransferDto>>(_transferRepository.GetTransfers());
 
             if (!ModelState.IsValid)
             {
@@ -52,7 +55,7 @@ namespace InvtryMgtSystemAPI.Controllers
                 return NotFound();
             }
 
-            var transfer = _mapper.Map<TransferDto>(_transferRepository.GetTransfer(transferId));
+            var transfer = _mapper.Map<StockTransferDto>(_transferRepository.GetTransfer(transferId));
 
             if (!ModelState.IsValid)
             {
@@ -87,7 +90,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult CreateTransfer([FromBody]TransferDto createTransfer)
+        public IActionResult CreateTransfer([FromBody]StockTransferDto createTransfer)
         {
             if (createTransfer == null)
             {
@@ -106,7 +109,7 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var transferMap = _mapper.Map<Transfer>(createTransfer);
+            var transferMap = _mapper.Map<StockTransfer>(createTransfer);
 
 
             if (!_transferRepository.CreateTransfer(transferMap))
@@ -115,42 +118,43 @@ namespace InvtryMgtSystemAPI.Controllers
             }
             return Ok("Successfully Created");
         }
-        //   [HttpPost("StockTransfer")]
-        // public IActionResult StockTransfer(StockTransferDto stockTransfer)
-        // {
 
-        //     StockTransfer stockT = new StockTransfer();
+        [HttpPost("StockTransfer")]
+        public IActionResult StockTransfer(StockTransferDto stockTransfer)
+        {
 
-        //     stockT.TransferQuantity = stockTransfer.TransferQuantity;
-        //     stockT.ProductInventoryId = stockTransfer.ProductInventoryId;
-        //     stockT.StoreId = stockTransfer.StoreId;
-        //     stockT.UserId = stockTransfer.UserId;
-        //     stockT.CreatedDate = DateTime.Now;
-        //     stockT.StatusId = 1;
+            StockTransfer stockT = new StockTransfer();
 
-
-        //     var InventoryResult = _ctx.ProductInventories.Where(o => o.Id == stockT.ProductInventoryId).FirstOrDefault();
-        //     var currentQuantity = double.Parse(InventoryResult.Quantity) - double.Parse(stockT.TransferQuantity);
-        //     InventoryResult.Quantity = currentQuantity.ToString();
+            stockT.TransferQuantity = stockTransfer.TransferQuantity;
+            stockT.ProductInventoryId = stockTransfer.ProductInventoryId;
+            stockT.StoreId = stockTransfer.StoreId;
+            stockT.UserId = stockTransfer.UserId;
+            stockT.CreatedDate = DateTime.Now;
+            stockT.StatusId = 1;
 
 
-        //     _ctx.StockTransfers.Add(stockT);
-        //     _ctx.SaveChanges();
+            var InventoryResult = _ctx.ProductInventories.Where(o => o.ProductInventoryId == stockT.ProductInventoryId).FirstOrDefault();
+            var currentQuantity = InventoryResult.Quantity - stockT.TransferQuantity;
+            InventoryResult.Quantity = currentQuantity;
 
-        //     var result = new
-        //     {
-        //         StatusCode = 200,
-        //         Content = "Stock Transferred Successfully",
-        //     };
-        //     return Ok(result);
-        // }
+
+            _ctx.StockTransfers.Add(stockT);
+            _ctx.SaveChanges();
+
+            var result = new
+            {
+                StatusCode = 200,
+                Content = "Stock Transferred Successfully",
+            };
+            return Ok(result);
+        }
 
         [HttpPut("transferId")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult UpdateTransfer(Guid transferId, [FromForm] TransferDto updateTransfer)
+        public IActionResult UpdateTransfer(Guid transferId, [FromForm] StockTransferDto updateTransfer)
         {
             if (updateTransfer == null)
             {
@@ -168,7 +172,7 @@ namespace InvtryMgtSystemAPI.Controllers
             {
                 return BadRequest();
             }
-            var transferMap = _mapper.Map<Transfer>(updateTransfer);
+            var transferMap = _mapper.Map<StockTransfer>(updateTransfer);
             if (!_transferRepository.UpdateTransfer(transferMap))
             {
                  ModelState.AddModelError("", "Something Went wrong while Updating Transfer");
@@ -182,7 +186,7 @@ namespace InvtryMgtSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public IActionResult DeleteTransfer(Guid transferId, [FromBody]TransferDto deleteTransfer)
+        public IActionResult DeleteTransfer(Guid transferId, [FromBody]StockTransferDto deleteTransfer)
         {
             if (deleteTransfer == null)
             {

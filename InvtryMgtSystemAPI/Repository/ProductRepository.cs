@@ -20,32 +20,32 @@ namespace InvtryMgtSystemAPI.Repository
             _mapper = mapper;
         }
 
-        public bool CreateProduct(Product product)
+        public bool CreateProduct(ProductInventory product)
         {
             _context.Add(product);
             return save();
         }
 
-        public bool DeleteProduct(Product product)
+        public bool DeleteProduct(ProductInventory product)
         {
             _context.Remove(product);
             return save();
         }
 
-        public Product GetProduct(Guid id)
+        public ProductInventory GetProduct(Guid id)
         {
-            return _context.Products.Where(p => p.Id == id).FirstOrDefault();
+            return _context.ProductInventories.Where(p => p.ProductInventoryId == id).FirstOrDefault();
         }
 
 
-        public ICollection<Product> GetProducts()
+        public ICollection<ProductInventory> GetProducts()
         {
-            return _context.Products.ToList();
+            return _context.ProductInventories.ToList();
         }
 
         public bool ProductExists(Guid id)
         {
-            return _context.Products.Any(p => p.Id == id);
+            return _context.ProductInventories.Any(p => p.ProductInventoryId == id);
         }
 
         public bool save()
@@ -54,7 +54,7 @@ namespace InvtryMgtSystemAPI.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool UpdateProduct(Product product)
+        public bool UpdateProduct(ProductInventory product)
         {
             _context.Update(product);
             return save();

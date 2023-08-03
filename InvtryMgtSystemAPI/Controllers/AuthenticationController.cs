@@ -33,16 +33,15 @@ namespace InvtryMgtSystemAPI.Controllers
         [Route("register")]
 
         public async Task<IActionResult> Register([FromBody] Register model)
-        
         {
-            var userExists = await _userManager.FindByNameAsync(model.UserName);
+            var userExist = await _userManager.FindByNameAsync(model.UserName);
 
-            if (userExists != null)
+            if (userExist != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User Already Exists" });
             }
 
-            ApplicationUser user = new()
+            ApplicationUser user =new ApplicationUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -52,7 +51,7 @@ namespace InvtryMgtSystemAPI.Controllers
 
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation Failed Please Check user Details " });
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new Response { Status = "Error", Message = "User creation Failed Please Check user Details " });
             }
             return Ok(new Response { Status = "Success", Message = "User Created Successfully" });
         }
@@ -69,7 +68,7 @@ namespace InvtryMgtSystemAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User Already Exists" });
             }
 
-            ApplicationUser user = new()
+            ApplicationUser user = new ApplicationUser()
             {
                 Email = register.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -79,7 +78,7 @@ namespace InvtryMgtSystemAPI.Controllers
 
             if (!result.Succeeded)
             {
-                return StatusCode(StatusCodes.Status422UnprocessableEntity, new Response { Status = "error", Message = "Failed toadd user" });
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new Response { Status = "error", Message = "Failed to add user" });
             }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
